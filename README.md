@@ -22,13 +22,13 @@ observr.emit('eventName'); // => emit event
 
 ## Methods
 
-### `.on()`
+### `.on(event, handler)`
 
-### `.one()`
+### `.once(event, handler)`
 
-### `.off()`
+### `.off(event [, handler])`
 
-### `.emit()`
+### `.emit(event [, arguments])`
 
 ## Contributing
 
