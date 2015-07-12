@@ -14,7 +14,7 @@ export default class Observr {
     this._events = this._events || {};
 
     if (typeof handler !== 'function') {
-      throw new Error('.on only accepts instances of Function');
+      throw new Error('`.on()` only accepts instances of Function.');
     }
 
     this._events[event] = this._events[event] || [];
@@ -27,7 +27,7 @@ export default class Observr {
     this._events = this._events || {};
 
     if (typeof handler !== 'function') {
-      throw new Error('.once only accepts instances of Function');
+      throw new Error('`.once()` only accepts instances of Function.');
     }
 
     this.on(event, (function(_this) {
@@ -47,9 +47,7 @@ export default class Observr {
     }
 
     if (handler) {
-      this._events[event] = this._events[event].filter(cb => {
-        return cb !== handler;
-      });
+      this._events[event] = this._events[event].filter(cb => cb !== handler);
     } else {
       delete this._events[event];
     }
@@ -58,13 +56,13 @@ export default class Observr {
   }
 
   emit(...args) {
-    const name = args.shift();
+    const event = args.shift();
 
-    if (!this._events[name]) {
+    if (!this._events[event]) {
       return this;
     }
 
-    this._events[name].forEach(handler => {
+    this._events[event].forEach(handler => {
       handler.apply(this, ...args);
     });
 
