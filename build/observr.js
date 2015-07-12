@@ -88,7 +88,7 @@ var Observr = (function () {
       }
 
       this._events[event].forEach(function (handler) {
-        handler.apply.apply(handler, [_this2].concat(args));
+        handler.apply(_this2, args);
       });
 
       return this;
@@ -99,6 +99,11 @@ var Observr = (function () {
     // Alias
     value: function addListener(event, handler) {
       this.on(event, handler);
+    }
+  }, {
+    key: 'one',
+    value: function one(event, handler) {
+      this.once(event, handler);
     }
   }, {
     key: 'removeListener',

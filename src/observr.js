@@ -63,7 +63,7 @@ export default class Observr {
     }
 
     this._events[event].forEach(handler => {
-      handler.apply(this, ...args);
+      handler.apply(this, args);
     });
 
     return this;
@@ -72,6 +72,10 @@ export default class Observr {
   // Alias
   addListener(event, handler) {
     this.on(event, handler);
+  }
+
+  one(event, handler) {
+    this.once(event, handler);
   }
 
   removeListener(event, handler) {
