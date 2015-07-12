@@ -28,7 +28,7 @@ var Observr = (function () {
       this._events = this._events || {};
 
       if (typeof handler !== 'function') {
-        throw new Error('.on only accepts instances of Function');
+        throw new Error('`.on()` only accepts instances of Function.');
       }
 
       this._events[event] = this._events[event] || [];
@@ -42,7 +42,7 @@ var Observr = (function () {
       this._events = this._events || {};
 
       if (typeof handler !== 'function') {
-        throw new Error('.once only accepts instances of Function');
+        throw new Error('`.once()` only accepts instances of Function.');
       }
 
       this.on(event, (function (_this) {
@@ -81,13 +81,13 @@ var Observr = (function () {
         args[_key] = arguments[_key];
       }
 
-      var name = args.shift();
+      var event = args.shift();
 
-      if (!this._events[name]) {
+      if (!this._events[event]) {
         return this;
       }
 
-      this._events[name].forEach(function (handler) {
+      this._events[event].forEach(function (handler) {
         handler.apply.apply(handler, [_this2].concat(args));
       });
 
