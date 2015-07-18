@@ -25,10 +25,8 @@ var Observr = (function () {
   _createClass(Observr, [{
     key: 'on',
     value: function on(event, handler) {
-      this._events = this._events || {};
-
       if (typeof handler !== 'function') {
-        throw new Error('`.on()` only accepts instances of Function.');
+        throw new Error(handler + ' is not a function');
       }
 
       this._events[event] = this._events[event] || [];
@@ -39,16 +37,19 @@ var Observr = (function () {
   }, {
     key: 'once',
     value: function once(event, handler) {
-      this._events = this._events || {};
-
       if (typeof handler !== 'function') {
-        throw new Error('`.once()` only accepts instances of Function.');
+        throw new Error(handler + ' is not a function');
       }
 
       this.on(event, (function (_this) {
-        return function _handler() {
-          _this.off(event, _handler);
-          handler.apply(_this, arguments);
+        return function _self() {
+          _this.off(event, _self);
+
+          for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          handler.apply(_this, args);
         };
       })(this));
 
@@ -58,13 +59,12 @@ var Observr = (function () {
     key: 'off',
     value: function off(event, handler) {
       if (!event || !this._events[event]) {
-        this._events = this._events || {};
         return this;
       }
 
       if (handler) {
-        this._events[event] = this._events[event].filter(function (cb) {
-          return cb !== handler;
+        this._events[event] = this._events[event].filter(function (h) {
+          return h !== handler;
         });
       } else {
         delete this._events[event];
@@ -74,14 +74,12 @@ var Observr = (function () {
     }
   }, {
     key: 'emit',
-    value: function emit() {
+    value: function emit(event) {
       var _this2 = this;
 
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
+      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
       }
-
-      var event = args.shift();
 
       if (!this._events[event]) {
         return this;
@@ -117,8 +115,12 @@ var Observr = (function () {
     }
   }, {
     key: 'trigger',
-    value: function trigger() {
-      this.emit.apply(this, arguments);
+    value: function trigger(event) {
+      for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+        args[_key3 - 1] = arguments[_key3];
+      }
+
+      this.emit.apply(this, [event].concat(args));
     }
   }]);
 

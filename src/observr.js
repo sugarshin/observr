@@ -11,10 +11,8 @@ export default class Observr {
   }
 
   on(event, handler) {
-    this._events = this._events || {};
-
     if (typeof handler !== 'function') {
-      throw new Error('`.on()` only accepts instances of Function.');
+      throw new Error(`${handler} is not a function`);
     }
 
     this._events[event] = this._events[event] || [];
@@ -24,16 +22,14 @@ export default class Observr {
   }
 
   once(event, handler) {
-    this._events = this._events || {};
-
     if (typeof handler !== 'function') {
-      throw new Error('`.once()` only accepts instances of Function.');
+      throw new Error(`${handler} is not a function`);
     }
 
     this.on(event, (function(_this) {
-      return function _handler() {
-        _this.off(event, _handler);
-        handler.apply(_this, arguments);
+      return function _self(...args) {
+        _this.off(event, _self);
+        handler.apply(_this, args);
       };
     })(this));
 
@@ -42,12 +38,11 @@ export default class Observr {
 
   off(event, handler) {
     if (!event || !this._events[event]) {
-      this._events = this._events || {};
       return this;
     }
 
     if (handler) {
-      this._events[event] = this._events[event].filter(cb => cb !== handler);
+      this._events[event] = this._events[event].filter(h => h !== handler);
     } else {
       delete this._events[event];
     }
@@ -55,9 +50,7 @@ export default class Observr {
     return this;
   }
 
-  emit(...args) {
-    const event = args.shift();
-
+  emit(event, ...args) {
     if (!this._events[event]) {
       return this;
     }
@@ -86,8 +79,8 @@ export default class Observr {
     this.off(event, handler);
   }
 
-  trigger(...args) {
-    this.emit(...args);
+  trigger(event, ...args) {
+    this.emit(event, ...args);
   }
 
 }
